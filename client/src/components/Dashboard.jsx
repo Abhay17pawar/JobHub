@@ -27,7 +27,7 @@ export default function JobDashboard() {
           employmentTypes: "Fulltime,Internship,Contractor"
         },
         headers: {
-          "X-RapidAPI-Key": "e7665213f5mshcb4e0a9e921aa4fp17cb58jsn016aff15f92a",
+          "X-RapidAPI-Key": process.env.REACT_APP_API_KEY,
           "X-RapidAPI-Host": "jobs-api14.p.rapidapi.com"
         }
       };
