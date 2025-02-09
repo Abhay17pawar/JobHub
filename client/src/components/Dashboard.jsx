@@ -1,41 +1,31 @@
 import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import { Search, Bookmark, PlusCircle } from "lucide-react";
-import BookmarkAddedIcon from '@mui/icons-material/BookmarkAdded';
-import SearchIcon from '@mui/icons-material/Search';
+import BookmarkAddedIcon from "@mui/icons-material/BookmarkAdded";
+import SearchIcon from "@mui/icons-material/Search";
 import Card from "./JobsCard";
 import axios from "axios";
+import Loader from "./Loader";
+import CustomPagination from "./CustomPagination"; // Import pagination component
+import ProfileCardBtn from "./ProfileCard";
 
 export default function JobDashboard() {
+  const { register, handleSubmit } = useForm();
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [page, setPage] = useState(1);
+  const jobsPerPage = 8; 
 
   useEffect(() => {
-    fetchJobs();
+    fetchJobs({});
   }, []);
 
-  const fetchJobs = async () => {
+  const fetchJobs = async (searchData) => {
     try {
-      const options = {
-        method: "GET",
-        url: "https://jobs-api14.p.rapidapi.com/v2/list",
-        params: {
-          query: "Web Developer",
-          location: "India",
-          autoTranslateLocation: "true",
-          remoteOnly: "true",
-          employmentTypes: "Fulltime,Internship,Contractor"
-        },
-        headers: {
-          "X-RapidAPI-Key": process.env.REACT_APP_API_KEY,
-          "X-RapidAPI-Host": "jobs-api14.p.rapidapi.com"
-        }
-      };
-      const response = await axios.request(options);
-      console.log(response.data)
-
-      // Use the structure of response.data.jobs to set jobs
-      setJobs(response.data?.jobs || []); // Adjust according to actual API structure
+      setLoading(true);
+      const response = await axios.post("http://localhost:3000/api/dashboard", searchData);
+      setJobs(response.data?.jobs || []);
     } catch (error) {
       console.log(error);
       setError("Server error, Please try again :)");
@@ -43,6 +33,18 @@ export default function JobDashboard() {
       setLoading(false);
     }
   };
+
+  const onSubmit = (data) => {
+    fetchJobs(data);
+  };
+
+  const handlePageChange = (event, value) => {
+    setPage(value);
+  };
+
+  // Pagination logic
+  const totalPages = Math.ceil(jobs.length / jobsPerPage);
+  const displayedJobs = jobs.slice((page - 1) * jobsPerPage, page * jobsPerPage);
 
   return (
     <div className="flex bg-gray-100">
@@ -56,6 +58,9 @@ export default function JobDashboard() {
             <li className="flex items-center space-x-2 text-gray-700 cursor-pointer">
               <BookmarkAddedIcon size={18} /> <span>Saved Jobs</span>
             </li>
+            <li className="flex items-center space-x-2 text-gray-700 cursor-pointer ">
+    <ProfileCardBtn />
+  </li>
           </ul>
         </nav>
       </aside>
@@ -66,44 +71,76 @@ export default function JobDashboard() {
             <PlusCircle size={18} className="mr-2" /> Post a Job
           </button>
         </div>
-        <div className="mt-4 flex space-x-2">
+
+        <form onSubmit={handleSubmit(onSubmit)} className="mt-4 flex space-x-2">
           <input
+            {...register("title")}
             type="text"
             placeholder="Job title or keywords"
             className="w-1/3 p-2 border rounded"
           />
           <input
+            {...register("salary")}
             type="text"
             placeholder="Salary (e.g. 50000, 60k, 70,000)"
             className="w-1/3 p-2 border rounded"
           />
           <input
+            {...register("location")}
             type="text"
             placeholder="Location"
             className="w-1/3 p-2 border rounded"
           />
-          <button className="bg-black text-white px-4 py-2 rounded">Search</button>
-        </div>
+          <button type="submit" className="bg-black text-white px-4 py-2 rounded">
+            Search
+          </button>
+        </form>
+
         {loading ? (
-          <p className="text-center mt-6">Loading jobs...</p>
+          <div className="text-center mt-6">
+            <Loader />
+          </div>
         ) : error ? (
           <p className="text-center text-red-500 mt-6">{error}</p>
         ) : (
-          <div className="grid grid-cols-4 gap-2 mt-6">
-            {jobs.map((job, index) => (
-              <Card
-                key={index}
-                title={job?.title}
-                company={job?.company}
-                location={job?.location || "Location not specified"}
-                salary={job?.salaryRange || "Salary not provided"}
-                type={job?.employmentType || "Contractor"}
-                logo={job?.image}
-                platform={job?.jobProviders[0]?.jobProvider || "Unknown"}
-                jobLink={job?.jobProviders[0]?.url || "#"}
-              />
-            ))}
-          </div>
+          <>
+            <div className="grid grid-cols-4 gap-2 mt-6">
+              {displayedJobs
+                .filter((job) => {
+                  const missingFields = [
+                    !job?.title,
+                    !job?.company,
+                    !job?.stipend,
+                    !job?.location,
+                    !job?.company_url,
+                    !job?.jobUrl,
+                    !job?.logo,
+                  ].filter(Boolean).length;
+
+                  return missingFields <= 2;
+                })
+                .map((job, index) => (
+                  <Card
+                    key={index}
+                    title={job?.title || "No Title"}
+                    company={job?.company || "No Company"}
+                    salary={job?.stipend || "Not disclosed"}
+                    location={job?.location || "Location not specified"}
+                    type={job?.job_type || "Internship"}
+                    platform={job?.company_url || ""}
+                    jobLink={job?.jobUrl || "#"}
+                    logo={job?.logo || ""}
+                  />
+                ))}
+            </div>
+            {/* Pagination Component */}
+          {/* Pagination Component */}
+{totalPages > 1 && (
+  <div className="flex justify-center mt-4">
+    <CustomPagination page={page} count={totalPages} onChange={handlePageChange} />
+  </div>
+)}
+          </>
         )}
       </main>
     </div>

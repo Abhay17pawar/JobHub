@@ -9,16 +9,16 @@ const JobCard = ({title,company,salary,location,type,logo,jobLink}) => {
         <section className="bg-orange-100 rounded-t-xl p-6 text-sm">
           <header className="flex justify-between items-center font-bold">
           <img src={logo}
-            className='h-10 w-35' />
-            <div className="text-gray-700">
+            className='h-10 w-22'/>
+          </header>
+          <p className="mt-6 py-4 text-2xl font-semibold">{title}</p>
+          <div className="text-gray-700">
             <a href={jobLink} target="_blank" rel="noopener noreferrer">
               <button className="w-full sm:w-auto px-5 py-1 rounded-xl bg-gray-800 text-white text-lg font-medium hover:bg-gray-800">
                 Apply
               </button>
             </a>
             </div>
-          </header>
-          <p className="mt-6 py-4 text-2xl font-semibold">{title}</p>
         </section>
     <p className="mt-2 text-lg font-semibold mx-4 ">
         <WorkIcon/>
