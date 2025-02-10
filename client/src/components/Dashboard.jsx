@@ -6,8 +6,9 @@ import SearchIcon from "@mui/icons-material/Search";
 import Card from "./JobsCard";
 import axios from "axios";
 import Loader from "./Loader";
-import CustomPagination from "./CustomPagination"; // Import pagination component
+import CustomPagination from "./CustomPagination";
 import ProfileCardBtn from "./ProfileCard";
+import { UserButton, useUser } from "@clerk/clerk-react";
 
 export default function JobDashboard() {
   const { register, handleSubmit } = useForm();
@@ -15,11 +16,28 @@ export default function JobDashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [page, setPage] = useState(1);
-  const jobsPerPage = 8; 
+  const jobsPerPage = 8;
 
-  useEffect(() => {
+  const { user } = useUser();
+  const userEmail = user?.primaryEmailAddress?.emailAddress
+  console.log("userId : ",userEmail)
+
+   useEffect(() => {
+    if (userEmail) {
+      // Send GET request to store email
+      const emailURL = `http://localhost:3000/api/store-email?email=${encodeURIComponent(userEmail)}`;
+      axios
+        .get(emailURL)
+        .then((response) => {
+          console.log("Email stored successfully:", response.data);
+        })
+        .catch((error) => {
+          console.error("Error storing email:", error);
+        });
+    }
+    // Fetch jobs when the component mounts or the user email changes
     fetchJobs({});
-  }, []);
+  }, [userEmail]);
 
   const fetchJobs = async (searchData) => {
     try {
@@ -58,17 +76,17 @@ export default function JobDashboard() {
             <li className="flex items-center space-x-2 text-gray-700 cursor-pointer">
               <BookmarkAddedIcon size={18} /> <span>Saved Jobs</span>
             </li>
-            <li className="flex items-center space-x-2 text-gray-700 cursor-pointer ">
-    <ProfileCardBtn />
-  </li>
+            <li className="flex items-center space-x-2 text-gray-700 cursor-pointer">
+              <ProfileCardBtn />
+            </li>
           </ul>
         </nav>
       </aside>
       <main className="flex-1 p-6">
         <div className="flex justify-between items-center">
           <h2 className="text-2xl font-bold">Job Dashboard</h2>
-          <button className="flex items-center bg-black text-white px-4 py-2 rounded-md">
-            <PlusCircle size={18} className="mr-2" /> Post a Job
+          <button className="flex items-center bg-yellow-200 text-white px-1 py-1 rounded-full">
+            <UserButton />
           </button>
         </div>
 
@@ -133,13 +151,12 @@ export default function JobDashboard() {
                   />
                 ))}
             </div>
-            {/* Pagination Component */}
-          {/* Pagination Component */}
-{totalPages > 1 && (
-  <div className="flex justify-center mt-4">
-    <CustomPagination page={page} count={totalPages} onChange={handlePageChange} />
-  </div>
-)}
+
+            {totalPages > 1 && (
+              <div className="flex justify-center mt-4">
+                <CustomPagination page={page} count={totalPages} onChange={handlePageChange} />
+              </div>
+            )}
           </>
         )}
       </main>

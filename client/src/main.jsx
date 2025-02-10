@@ -11,12 +11,12 @@ if (!PUBLISHABLE_KEY) {
 }
 
 createRoot(document.getElementById('root')).render(
+  <BrowserRouter>
   <ClerkProvider publishableKey={PUBLISHABLE_KEY} 
-  signInFallbackRedirectUrl="/Jobs-Dashboard"  // Redirect to dashboard after sign-in
-  signUpFallbackRedirectUrl="/Jobs-Dashboard"
-  afterSignOutUrl="/">
-    <BrowserRouter>
+  signInFallbackRedirectUrl="/"  
+  signUpFallbackRedirectUrl="/"
+  afterSignOutUrl="/landing-page">
       <App />
-    </BrowserRouter>
   </ClerkProvider>
+    </BrowserRouter>
 );

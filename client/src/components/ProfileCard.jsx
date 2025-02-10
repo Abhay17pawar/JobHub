@@ -1,55 +1,62 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { FiAlertCircle } from "react-icons/fi";
 import { useState } from "react";
-import { toast, ToastContainer } from "react-toastify"; // Importing Toastify functions
-import "react-toastify/dist/ReactToastify.css"; // Import Toastify CSS
-import axios from 'axios'; // Import axios
+import { toast, ToastContainer } from "react-toastify"; 
+import "react-toastify/dist/ReactToastify.css"; 
+import axios from 'axios'; 
+import Spinner from "./Loader2";
 
 const ProfileCardBtn = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [file, setFile] = useState(null); 
-
+  const [file, setFile] = useState(null);
+  const [loading, setLoading] = useState(false); 
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     if (selectedFile) {
-      console.log("Selected file:", selectedFile); // Log the selected file
-      setFile(selectedFile); 
+      console.log("Selected file:", selectedFile); 
+      setFile(selectedFile);
     }
   };
 
   const handleFileUpload = async () => {
     if (file) {
+      setLoading(true); 
+
       const formData = new FormData();
-      formData.append('file', file); // 'file' is the name of the field you're sending
-  
+      formData.append('file', file); 
+
       try {
-        // Step 1: Upload the file to Cloudinary
         const response = await axios.post("http://localhost:3000/api/upload", formData, {
           headers: {
-            "Content-Type": "multipart/form-data", // Ensure the server knows it's a file
+            "Content-Type": "multipart/form-data", 
           },
         });
-  
-        // Get the Cloudinary URL from the response
+
         const cloudinaryURL = response.data.file.url;
-  
-        // Step 2: Send the Cloudinary URL to the process-pdf route
-        const result = await axios.get(`http://localhost:3000/api/process-pdf?cloudinaryURL=${encodeURIComponent(cloudinaryURL)}`);
-  
-        // Process the result (e.g., display extracted emails and skills)
-        console.log(result.data);
-  
+
+        // Step 2: Process the PDF file using the Cloudinary URL
+      const result = await axios.get(`http://localhost:3000/api/process-pdf?cloudinaryURL=${encodeURIComponent(cloudinaryURL)}`);
+
+      console.log(result.data);
+      const extractedData = result.data;  
+      const sendData = {
+        email: extractedData.email,
+        skills: extractedData.skills,
+      };
+
+      await axios.put("http://localhost:3000/api/save-extracted-data", sendData);
+
         toast.success("File uploaded and processed successfully!");
         setIsOpen(false);
       } catch (error) {
         console.error("Error during file upload and PDF extraction:", error);
         toast.error("An error occurred. Please try again.");
+      } finally {
+        setLoading(false); 
       }
     }
   };
-  
-  
 
   return (
     <div className="px-1 py-18 place-content-center">
@@ -65,13 +72,14 @@ const ProfileCardBtn = () => {
         handleFileChange={handleFileChange}
         handleFileUpload={handleFileUpload}
         file={file}
+        loading={loading} 
       />
       <ToastContainer />
     </div>
   );
 };
 
-const SpringModal = ({ isOpen, setIsOpen, handleFileChange, handleFileUpload, file }) => {
+const SpringModal = ({ isOpen, setIsOpen, handleFileChange, handleFileUpload, file, loading }) => {
   return (
     <AnimatePresence>
       {isOpen && (
@@ -101,7 +109,6 @@ const SpringModal = ({ isOpen, setIsOpen, handleFileChange, handleFileUpload, fi
                 Please upload your resume in PDF, DOCX, or any other supported format.
               </p>
 
-              {/* File input */}
               <div className="mb-4 text-center">
                 <input
                   type="file"
@@ -121,12 +128,15 @@ const SpringModal = ({ isOpen, setIsOpen, handleFileChange, handleFileUpload, fi
                 >
                   Cancel
                 </button>
-                <button
+                <motion.button
                   onClick={handleFileUpload}
-                  className="bg-white hover:opacity-90 transition-opacity text-stone-800 font-semibold w-full py-2 rounded"
+                  className={`bg-white hover:opacity-90 transition-opacity text-stone-800 font-semibold w-full py-2 rounded ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
+                  whileTap={loading ? {} : { scale: 0.95 }} // Button animation on click
                 >
-                  Upload
-                </button>
+                  {loading ? (
+                    <span className="animate-spin"><Spinner/></span> // Spinner text when loading
+                  ) : "Upload"}
+                </motion.button>
               </div>
             </div>
           </motion.div>

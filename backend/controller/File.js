@@ -4,9 +4,9 @@ const cloudinary = require('../controller/cloudinary'); // Import Cloudinary
 const fs = require('fs');
 const axios = require('axios');
 const pdf = require('pdf-parse');
+const { user } = require("../models/userModel");
 
 const skillsList = [
-    // Web Development
     'HTML', 'CSS', 'JavaScript', 'React', 'Angular', 'Vue.js', 'Node.js', 'Express.js', 'SASS', 'Bootstrap', 'jQuery', 'jQuery UI', 'TypeScript', 'JSP', 'Next.js', 'Redux', 'WebSockets', 'GraphQL', 'Django', 'Flask',
   
     // Frontend Development
@@ -130,7 +130,6 @@ const extractTextFromPDF = async (req, res) => {
   try {
     const { cloudinaryURL } = req.query; // Get the Cloudinary URL from the query parameters
 
-    // Validate if the Cloudinary URL is present
     if (!cloudinaryURL || typeof cloudinaryURL !== 'string') {
       return res.status(400).json({ error: 'Invalid Cloudinary URL' });
     }
@@ -168,4 +167,32 @@ const extractTextFromPDF = async (req, res) => {
   }
 };
 
-module.exports = { upload, uploadFile, extractTextFromPDF };
+const savePDFdata = async (req, res) => {
+  const { email , skills } = req.body;  // This will get the skills array from the request body
+
+  try {
+    // First, try to find the user by email
+    let updatedUser = await user.findOne({ email });
+
+    if (updatedUser) {
+      // If user is found, update the skills
+      updatedUser.skills = skills;
+      await updatedUser.save();  // Save the updated user document
+      return res.status(200).send({ message: 'User skills updated successfully' });
+    } else {
+      // If no user is found, create a new user
+      updatedUser = new user({
+        email,  // Use the provided email
+        skills: skills,  // Use the provided skills
+      });
+      await updatedUser.save();  // Save the new user document
+      return res.status(201).send({ message: 'New user created with skills' });
+    }
+  } catch (error) {
+    console.error('Error updating or creating user data:', error);
+    return res.status(500).send({ message: 'Failed to update or create user data' });
+  }
+};
+
+
+module.exports = { upload, uploadFile, extractTextFromPDF, savePDFdata };
