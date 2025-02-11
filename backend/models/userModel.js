@@ -3,7 +3,6 @@ const mongoose = require("mongoose");
 const UserSchema = new mongoose.Schema({
     email : {
        type : String,
-       required : true,
        unique : true
     },
      skills : {
@@ -12,6 +11,6 @@ const UserSchema = new mongoose.Schema({
      }
 })
    
-const dashboard = mongoose.model('User',UserSchema);
+const User = mongoose.model('User',UserSchema);
 
-module.exports = dashboard;
+module.exports = User;

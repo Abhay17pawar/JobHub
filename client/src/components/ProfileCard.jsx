@@ -35,13 +35,12 @@ const ProfileCardBtn = () => {
 
         const cloudinaryURL = response.data.file.url;
 
-        // Step 2: Process the PDF file using the Cloudinary URL
       const result = await axios.get(`http://localhost:3000/api/process-pdf?cloudinaryURL=${encodeURIComponent(cloudinaryURL)}`);
 
       console.log(result.data);
       const extractedData = result.data;  
       const sendData = {
-        email: extractedData.email,
+        email: extractedData.emails,
         skills: extractedData.skills,
       };
 
@@ -134,7 +133,7 @@ const SpringModal = ({ isOpen, setIsOpen, handleFileChange, handleFileUpload, fi
                   whileTap={loading ? {} : { scale: 0.95 }} // Button animation on click
                 >
                   {loading ? (
-                    <span className="animate-spin"><Spinner/></span> // Spinner text when loading
+                    <span ><Spinner/></span> // Spinner text when loading
                   ) : "Upload"}
                 </motion.button>
               </div>

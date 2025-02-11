@@ -5,7 +5,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #212121; /* Set the background color */
+  background-color: black; /* Set the background color */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -13,155 +13,193 @@
 }
 
 .loader {
-  --path: #2f3545;
-  --dot: #5628ee;
+  --background: linear-gradient(135deg, #23C4F8, #275EFE);
+  --shadow: rgba(39, 94, 254, 0.28);
+  --text: #6C7486;
+  --page: rgba(255, 255, 255, 0.36);
+  --page-fold: rgba(255, 255, 255, 0.52);
   --duration: 3s;
-  width: 44px;
-  height: 44px;
+  width: 200px;
+  height: 140px;
   position: relative;
 }
 
-.loader:before {
+.loader:before, .loader:after {
+  --r: -6deg;
   content: "";
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
   position: absolute;
-  display: block;
-  background: var(--dot);
-  top: 37px;
-  left: 19px;
-  transform: translate(-18px, -18px);
-  animation: dotRect var(--duration) cubic-bezier(0.785, 0.135, 0.15, 0.86) infinite;
+  bottom: 8px;
+  width: 120px;
+  top: 80%;
+  box-shadow: 0 16px 12px var(--shadow);
+  transform: rotate(var(--r));
 }
 
-.loader svg {
-  display: block;
+.loader:before {
+  left: 4px;
+}
+
+.loader:after {
+  --r: 6deg;
+  right: 4px;
+}
+
+.loader div {
   width: 100%;
   height: 100%;
+  border-radius: 13px;
+  position: relative;
+  z-index: 1;
+  perspective: 600px;
+  box-shadow: 0 4px 6px var(--shadow);
+  background-image: var(--background);
 }
 
-.loader svg rect,
-.loader svg polygon,
-.loader svg circle {
-  fill: none;
-  stroke: var(--path);
-  stroke-width: 10px;
-  stroke-linejoin: round;
-  stroke-linecap: round;
+.loader div ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  position: relative;
 }
 
-.loader svg polygon {
-  stroke-dasharray: 145 76 145 76;
-  stroke-dashoffset: 0;
-  animation: pathTriangle var(--duration) cubic-bezier(0.785, 0.135, 0.15, 0.86) infinite;
+.loader div ul li {
+  --r: 180deg;
+  --o: 0;
+  --c: var(--page);
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  transform-origin: 100% 50%;
+  color: var(--c);
+  opacity: var(--o);
+  transform: rotateY(var(--r));
+  -webkit-animation: var(--duration) ease infinite;
+  animation: var(--duration) ease infinite;
 }
 
-.loader svg rect {
-  stroke-dasharray: 192 64 192 64;
-  stroke-dashoffset: 0;
-  animation: pathRect 3s cubic-bezier(0.785, 0.135, 0.15, 0.86) infinite;
+.loader div ul li:nth-child(2) {
+  --c: var(--page-fold);
+  -webkit-animation-name: page-2;
+  animation-name: page-2;
 }
 
-.loader svg circle {
-  stroke-dasharray: 150 50 150 50;
-  stroke-dashoffset: 75;
-  animation: pathCircle var(--duration) cubic-bezier(0.785, 0.135, 0.15, 0.86) infinite;
+.loader div ul li:nth-child(3) {
+  --c: var(--page-fold);
+  -webkit-animation-name: page-3;
+  animation-name: page-3;
 }
 
-.loader.triangle {
-  width: 48px;
+.loader div ul li:nth-child(4) {
+  --c: var(--page-fold);
+  -webkit-animation-name: page-4;
+  animation-name: page-4;
 }
 
-.loader.triangle:before {
-  left: 21px;
-  transform: translate(-10px, -18px);
-  animation: dotTriangle var(--duration) cubic-bezier(0.785, 0.135, 0.15, 0.86) infinite;
+.loader div ul li:nth-child(5) {
+  --c: var(--page-fold);
+  -webkit-animation-name: page-5;
+  animation-name: page-5;
 }
 
-@keyframes pathTriangle {
-  33% {
-    stroke-dashoffset: 74;
+.loader div ul li svg {
+  width: 90px;
+  height: 120px;
+  display: block;
+}
+
+.loader div ul li:first-child {
+  --r: 0deg;
+  --o: 1;
+}
+
+.loader div ul li:last-child {
+  --o: 1;
+}
+
+.loader span {
+  display: block;
+  left: 0;
+  right: 0;
+  top: 100%;
+  margin-top: 20px;
+  text-align: center;
+  color: var(--text);
+}
+
+@keyframes page-2 {
+  0% {
+    transform: rotateY(180deg);
+    opacity: 0;
   }
 
-  66% {
-    stroke-dashoffset: 147;
+  20% {
+    opacity: 1;
   }
 
-  100% {
-    stroke-dashoffset: 221;
-  }
-}
-
-@keyframes dotTriangle {
-  33% {
-    transform: translate(0, 0);
+  35%, 100% {
+    opacity: 0;
   }
 
-  66% {
-    transform: translate(10px, -18px);
-  }
-
-  100% {
-    transform: translate(-10px, -18px);
+  50%, 100% {
+    transform: rotateY(0deg);
   }
 }
 
-@keyframes pathRect {
-  25% {
-    stroke-dashoffset: 64;
+@keyframes page-3 {
+  15% {
+    transform: rotateY(180deg);
+    opacity: 0;
+  }
+
+  35% {
+    opacity: 1;
+  }
+
+  50%, 100% {
+    opacity: 0;
+  }
+
+  65%, 100% {
+    transform: rotateY(0deg);
+  }
+}
+
+@keyframes page-4 {
+  30% {
+    transform: rotateY(180deg);
+    opacity: 0;
   }
 
   50% {
-    stroke-dashoffset: 128;
+    opacity: 1;
   }
 
-  75% {
-    stroke-dashoffset: 192;
+  65%, 100% {
+    opacity: 0;
   }
 
-  100% {
-    stroke-dashoffset: 256;
-  }
-}
-
-@keyframes dotRect {
-  25% {
-    transform: translate(0, 0);
-  }
-
-  50% {
-    transform: translate(18px, -18px);
-  }
-
-  75% {
-    transform: translate(0, -36px);
-  }
-
-  100% {
-    transform: translate(-18px, -18px);
+  80%, 100% {
+    transform: rotateY(0deg);
   }
 }
 
-@keyframes pathCircle {
-  25% {
-    stroke-dashoffset: 125;
+@keyframes page-5 {
+  45% {
+    transform: rotateY(180deg);
+    opacity: 0;
   }
 
-  50% {
-    stroke-dashoffset: 175;
+  65% {
+    opacity: 1;
   }
 
-  75% {
-    stroke-dashoffset: 225;
+  80%, 100% {
+    opacity: 0;
   }
 
-  100% {
-    stroke-dashoffset: 275;
+  95%, 100% {
+    transform: rotateY(0deg);
   }
 }
 
-.loader {
-  display: inline-block;
-  margin: 0 16px;
-}
+ 

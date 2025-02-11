@@ -4,7 +4,7 @@ const cloudinary = require('../controller/cloudinary'); // Import Cloudinary
 const fs = require('fs');
 const axios = require('axios');
 const pdf = require('pdf-parse');
-const { user } = require("../models/userModel");
+const { User } = require("../models/userModel");
 
 const skillsList = [
     'HTML', 'CSS', 'JavaScript', 'React', 'Angular', 'Vue.js', 'Node.js', 'Express.js', 'SASS', 'Bootstrap', 'jQuery', 'jQuery UI', 'TypeScript', 'JSP', 'Next.js', 'Redux', 'WebSockets', 'GraphQL', 'Django', 'Flask',
@@ -172,7 +172,7 @@ const savePDFdata = async (req, res) => {
 
   try {
     // First, try to find the user by email
-    let updatedUser = await user.findOne({ email });
+    let updatedUser = await User.findOne(email);
 
     if (updatedUser) {
       // If user is found, update the skills
@@ -180,8 +180,7 @@ const savePDFdata = async (req, res) => {
       await updatedUser.save();  // Save the updated user document
       return res.status(200).send({ message: 'User skills updated successfully' });
     } else {
-      // If no user is found, create a new user
-      updatedUser = new user({
+      updatedUser = new User({
         email,  // Use the provided email
         skills: skills,  // Use the provided skills
       });

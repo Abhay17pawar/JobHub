@@ -71,8 +71,8 @@ const skillsList = [
 
 const extractEmails = (text) => {
   const emailRegex = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/g;
-  const emails = text.match(emailRegex); // Returns an array of emails
-  return emails || []; // If no emails are found, return an empty array
+  const email = text.match(emailRegex); // Returns an array of emails
+  return email || []; // If no emails are found, return an empty array
 };
 
 // Function to extract skills from text based on the predefined list
