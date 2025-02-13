@@ -18,8 +18,9 @@ export default function JobDashboard() {
   const [page, setPage] = useState(1);
   const jobsPerPage = 8;
 
-  const clearJobs = () => {
-    setJobs([]);
+  const clearJobs = (skilled = []) => {
+    setJobs(skilled);
+    console.log("skiiled ", skilled);
   };
 
   const { user } = useUser();
@@ -130,10 +131,10 @@ export default function JobDashboard() {
               {displayedJobs
                 .filter((job) => {
                   const missingFields = [
-                    !job?.title,
+                    !job?.jobTitle,
                     !job?.company,
                     !job?.stipend,
-                    !job?.location,
+                    !job?.jobLocation,
                     !job?.company_url,
                     !job?.jobUrl,
                     !job?.logo,
@@ -144,10 +145,10 @@ export default function JobDashboard() {
                 .map((job, index) => (
                   <Card
                     key={index}
-                    title={job?.title || "No Title"}
+                    title={job?.jobTitle || "No Title"}
                     company={job?.company || "No Company"}
                     salary={job?.stipend || "Not disclosed"}
-                    location={job?.location || "Location not specified"}
+                    location={job?.jobLocation || "Location not specified"}
                     type={job?.job_type || "Internship"}
                     platform={job?.company_url || ""}
                     jobLink={job?.jobUrl || "#"}

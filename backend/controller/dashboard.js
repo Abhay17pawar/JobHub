@@ -22,14 +22,14 @@ const dashboardData = async (req, res) => {
             const scrapedData = [];
 
             internships.each((index, element) => {
-                const title = $(element).find(".job-title-href").text().trim();
+                const jobTitle = $(element).find(".job-title-href").text().trim();
                 const company = $(element).find(".company-name").text().trim();
-                const location = $(element).find(".locations a").text().trim();
+                const jobLocation = $(element).find(".locations a").text().trim();
                 const stipend = $(element).find(".stipend").text().trim();
                 const jobUrl = "https://internshala.com" + ($(element).find(".company a").attr("href") || "#");
                 const logo = $(element).find(".internship_logo img").attr("src") || "";
 
-                scrapedData.push({ title, company, location, stipend, jobUrl, logo });
+                scrapedData.push({ jobTitle, company, jobLocation, stipend, jobUrl, logo });
             });
 
             // Send the scraped data as response
