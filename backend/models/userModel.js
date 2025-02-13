@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema({
           game_development:[String],
           ui_ux : [String],
           data_science: [String],
-          web_development : [String],
+          full_stack_development : [String],
           php_web_development : [String],
           python_django: [String],
           ruby_on_rails: [String], 

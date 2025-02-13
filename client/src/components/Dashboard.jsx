@@ -18,6 +18,10 @@ export default function JobDashboard() {
   const [page, setPage] = useState(1);
   const jobsPerPage = 8;
 
+  const clearJobs = () => {
+    setJobs([]);
+  };
+
   const { user } = useUser();
   const userEmail = user?.primaryEmailAddress?.emailAddress
   console.log("userId : ",userEmail)
@@ -77,7 +81,7 @@ export default function JobDashboard() {
               <BookmarkAddedIcon size={18} /> <span>Saved Jobs</span>
             </li>
             <li className="flex items-center space-x-2 text-gray-700 cursor-pointer">
-              <ProfileCardBtn />
+              <ProfileCardBtn clearJobs={clearJobs} />
             </li>
           </ul>
         </nav>

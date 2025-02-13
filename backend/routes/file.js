@@ -1,5 +1,5 @@
 const express = require('express');
-const {  extractTextFromPDF, savePDFdata } = require('../controller/File');
+const {  extractTextFromPDF } = require('../controller/File');
  const { upload, uploadFile } = require('../controller/File'); // Import the controller
 const User = require('../models/userModel');
  const router = express.Router();

@@ -6,10 +6,11 @@ import "react-toastify/dist/ReactToastify.css";
 import axios from 'axios'; 
 import Spinner from "./Loader2";
 
-const ProfileCardBtn = () => {
+const ProfileCardBtn = ({ clearJobs }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false); 
+  const [ skilled, setSkilled ] = useState([]);
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
@@ -44,10 +45,21 @@ const ProfileCardBtn = () => {
         skills: extractedData.skills,
       };
 
-      await axios.put("http://localhost:3000/api/save-extracted-data", sendData);
+      const saveresponse = await axios.put("http://localhost:3000/api/save-extracted-data", sendData);
 
+      if(saveresponse.status === 200){
         toast.success("File uploaded and processed successfully!");
-        setIsOpen(false);
+        setIsOpen(false); 
+        const skilledjobs = await axios.post("http://localhost:3000/api/internshala",
+         {
+         email : sendData.email
+      });
+        if(skilledjobs.status === 200){
+          console.log("skilled jobs are : ",skilledjobs.data?.jobs);
+          clearJobs();
+          setSkilled(skilledjobs.data?.jobs);
+        }
+      }
       } catch (error) {
         console.error("Error during file upload and PDF extraction:", error);
         toast.error("An error occurred. Please try again.");
@@ -133,7 +145,7 @@ const SpringModal = ({ isOpen, setIsOpen, handleFileChange, handleFileUpload, fi
                   whileTap={loading ? {} : { scale: 0.95 }} // Button animation on click
                 >
                   {loading ? (
-                    <span ><Spinner/></span> // Spinner text when loading
+                    <span ><Spinner/></span> 
                   ) : "Upload"}
                 </motion.button>
               </div>

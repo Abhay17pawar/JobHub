@@ -1,5 +1,5 @@
 const multer = require('multer');
-const cloudinary = require('../controller/cloudinary'); // Import Cloudinary
+const cloudinary = require('../controller/cloudinary'); 
 const fs = require('fs');
 const axios = require('axios');
 const pdf = require('pdf-parse');
@@ -7,7 +7,7 @@ const { User } = require("../models/userModel");
 
 const techStacks = {
   front_end_development: ['HTML', 'CSS', 'JavaScript', 'React', 'Angular', 'Vue.js', 'SASS', 'Bootstrap', 'jQuery', 'Next.js', 'Redux', 'GraphQL'],
-  web_development: ['HTML', 'CSS', 'JavaScript'],
+  full_stack_development: ['HTML', 'CSS', 'JavaScript','React','MongoDB','Node.js','Express.js'],
   backend_development: ['Node.js', 'Express.js', 'Python', 'Java', 'C#', 'Ruby', 'Golang', 'Flask', 'Spring', 'ASP.NET', 'Laravel', 'Django'],
   mobile_app_development: ['React Native', 'Flutter', 'Swift', 'Kotlin', 'Xamarin', 'Android', 'iOS'],
   machine_learning: ['TensorFlow', 'PyTorch', 'Keras', 'Scikit-learn', 'Pandas', 'NumPy', 'OpenCV', 'Matplotlib', 'Seaborn', 'Jupyter'],
@@ -25,7 +25,7 @@ const categorizeSkills = (skills) => {
   const categorizedSkills = {
     front_end_development: [],
     backend_development: [],
-    web_development: [],
+    full_stack_development: [],
     mobile_app_development: [],
     machine_learning: [],
     // dataEngineering: [],
@@ -69,7 +69,7 @@ const extractSkills = (text) => {
   const skills = techStacks.front_end_development.concat(
     techStacks.backend_development,
     techStacks.mobile_app_development,
-    techStacks.web_development,
+    techStacks.full_stack_development,
     techStacks.machine_learning,
     techStacks.dataEngineering,
     techStacks.cloud_computing,
@@ -170,7 +170,7 @@ const savePDFdata = async (req, res) => {
     // If needed, you could validate that skills are in the correct structure (array of strings per category)
 
     // Check if the skills object has the required structure
-    const validCategories = ['frontend', 'backend','web_development', 'mobile', 'machineLearning', 'dataEngineering', 'cloud', 'devOps', 'cybersecurity', 'testing', 'blockchain', 'analytics', 'otherTech'];
+    const validCategories = ['frontend', 'backend','full_stack_development', 'mobile', 'machineLearning', 'dataEngineering', 'cloud', 'devOps', 'cybersecurity', 'testing', 'blockchain', 'analytics', 'otherTech'];
     const isValid = validCategories.every(category => Array.isArray(skills[category]));
 
     if (!isValid) {

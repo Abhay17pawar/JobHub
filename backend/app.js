@@ -14,9 +14,11 @@ app.use(cors());
 app.use(express.json());
 
 const dashboardRoutes = require('./routes/dashboardRoute');
+const platformRoutes = require("./routes/platform");
 
 app.use('/api', dashboardRoutes);
 app.use('/api', uploadRoutes);
+app.use('/api',platformRoutes);
 
 mongoose.connect(MONGO_URI)
         .then(() => {
