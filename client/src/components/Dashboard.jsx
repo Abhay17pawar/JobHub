@@ -18,18 +18,13 @@ export default function JobDashboard() {
   const [page, setPage] = useState(1);
   const jobsPerPage = 8;
 
-  const clearJobs = (skilled = []) => {
-    setJobs(skilled);
-    console.log("skiiled ", skilled);
-  };
-
   const { user } = useUser();
   const userEmail = user?.primaryEmailAddress?.emailAddress
   console.log("userId : ",userEmail)
 
-   useEffect(() => {
+  useEffect(() => {
     if (userEmail) {
-      // Send GET request to store email
+      // Send GET request to store email only if userEmail is available
       const emailURL = `http://localhost:3000/api/store-email?email=${encodeURIComponent(userEmail)}`;
       axios
         .get(emailURL)
@@ -40,14 +35,20 @@ export default function JobDashboard() {
           console.error("Error storing email:", error);
         });
     }
+  
     // Fetch jobs when the component mounts or the user email changes
-    fetchJobs({});
+    if (userEmail) {
+      fetchJobs(userEmail);
+    }
   }, [userEmail]);
+  
 
-  const fetchJobs = async (searchData) => {
+  const fetchJobs = async (userEmail) => {
     try {
       setLoading(true);
-      const response = await axios.post("http://localhost:3000/api/dashboard", searchData);
+      const response = await axios.post("http://localhost:3000/api/dashboard", {
+        email : userEmail
+      });
       setJobs(response.data?.jobs || []);
     } catch (error) {
       console.log(error);
@@ -82,7 +83,7 @@ export default function JobDashboard() {
               <BookmarkAddedIcon size={18} /> <span>Saved Jobs</span>
             </li>
             <li className="flex items-center space-x-2 text-gray-700 cursor-pointer">
-              <ProfileCardBtn clearJobs={clearJobs} />
+              <ProfileCardBtn  />
             </li>
           </ul>
         </nav>

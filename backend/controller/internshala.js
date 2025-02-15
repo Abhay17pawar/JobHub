@@ -74,4 +74,21 @@ const dashboardData = async (req, res, skills) => {
   }
 };
 
-module.exports = { internshala };
+const skills = async (req,res) => {
+    try {
+      const { email } = req.body;
+      if(!email){
+        return res.send("send email!")
+      }
+      const skilled = await User.findOne({email});
+      const skills = skilled?.skills
+      return res.status(200).send({
+        skills
+      })
+    } catch (error) {
+      console.log(error);
+      return res.send("server error");
+    }
+}
+
+module.exports = { internshala,skills };

@@ -5,7 +5,6 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; 
 import axios from 'axios'; 
 import Spinner from "./Loader2";
-import JobDashboard from "./Dashboard";
 
 const ProfileCardBtn = ({ clearJobs }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -38,7 +37,7 @@ const ProfileCardBtn = ({ clearJobs }) => {
 
         const result = await axios.get(`http://localhost:3000/api/process-pdf?cloudinaryURL=${encodeURIComponent(cloudinaryURL)}`);
 
-        console.log(result.data);
+        console.log("jobs are here : ",result.data);
         const extractedData = result.data;  
         const sendData = {
           email: extractedData.emails,
@@ -56,7 +55,10 @@ const ProfileCardBtn = ({ clearJobs }) => {
           if(skilledjobs.status === 200){
             console.log("skilled jobs are : ", skilledjobs.data?.jobs);
             clearJobs(skilledjobs.data?.jobs); 
-            
+          const newApi = await axios.post("http://localhost:3000/api/save-skills" , {
+            email : sendData?.email
+          })
+          console.log(newApi.data?.skills)
           }
         }
       } catch (error) {
@@ -64,6 +66,7 @@ const ProfileCardBtn = ({ clearJobs }) => {
         toast.error("An error occurred. Please try again.");
       } finally {
         setLoading(false); 
+        window.location.reload();
       }
     }
   };
