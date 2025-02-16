@@ -21,29 +21,27 @@ const dashboardData = async (req, res) => {
         // Filter out skills with empty arrays (length > 0)
         const filteredSkills = Object.keys(skills)
             .filter(skill => skills[skill].length > 0) // Filter out skills with empty arrays
-            .map(skill => skill.replace(/_/g, '-')); // Replace "_" with "-" for the URL format
+            .map(skill => skill.replace(/_/g, '-')); 
 
-        // If no skills are left after filtering, return an error
-        if (filteredSkills.length === 0) {
-            return res.status(400).json({ error: "No valid skills found for this user" });
-        }
-
-        // Join the skills with commas for the URL
         const formattedTitle = filteredSkills.join(',');
 
         console.log("Formatted skills:", formattedTitle);
 
-    
-        const baseUrl = `https://internshala.com/internships/${formattedTitle}-internship/`;
+        let baseUrl;
+        if(formattedTitle.length != 0){
+         baseUrl = `https://internshala.com/internships/${formattedTitle}-internship/`;
+        }
+        else{
+            baseUrl = "http://internshala.com/internships/software-development-internship/stipend-1000"
+        }
 
-        // Fetch data from Internshala
         const response = await axios.get(baseUrl);
 
         if (response.status === 200) {
             const $ = cheerio.load(response.data);
 
             const internships = $(".individual_internship");
-            const scrapedData = [];
+            let scrapedData = [];
 
             internships.each((index, element) => {
                 const jobTitle = $(element).find(".job-title-href").text().trim();
@@ -53,7 +51,7 @@ const dashboardData = async (req, res) => {
                 const jobUrl = "https://internshala.com" + ($(element).find(".company a").attr("href") || "#");
                 const logo = $(element).find(".internship_logo img").attr("src") || "";
 
-                scrapedData.push({ jobTitle, company, jobLocation, stipend, jobUrl, logo });
+                scrapedData.unshift({ jobTitle, company, jobLocation, stipend, jobUrl, logo });
             });
 
             // Send the scraped data as response

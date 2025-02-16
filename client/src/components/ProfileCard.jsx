@@ -27,7 +27,7 @@ const ProfileCardBtn = ({ clearJobs }) => {
       formData.append('file', file); 
 
       try {
-        const response = await axios.post("http://localhost:3000/api/upload", formData, {
+        const response = await axios.post("http://localhost:8000/api/upload", formData, {
           headers: {
             "Content-Type": "multipart/form-data", 
           },
@@ -35,7 +35,7 @@ const ProfileCardBtn = ({ clearJobs }) => {
 
         const cloudinaryURL = response.data.file.url;
 
-        const result = await axios.get(`http://localhost:3000/api/process-pdf?cloudinaryURL=${encodeURIComponent(cloudinaryURL)}`);
+        const result = await axios.get(`http://localhost:8000/api/process-pdf?cloudinaryURL=${encodeURIComponent(cloudinaryURL)}`);
 
         console.log("jobs are here : ",result.data);
         const extractedData = result.data;  
@@ -44,18 +44,18 @@ const ProfileCardBtn = ({ clearJobs }) => {
           skills: extractedData.skills,
         };
 
-        const saveresponse = await axios.put("http://localhost:3000/api/save-extracted-data", sendData);
+        const saveresponse = await axios.put("http://localhost:8000/api/save-extracted-data", sendData);
 
         if(saveresponse.status === 200){
           toast.success("File uploaded and processed successfully!");
           setIsOpen(false); 
-          const skilledjobs = await axios.post("http://localhost:3000/api/internshala", {
+          const skilledjobs = await axios.post("http://localhost:8000/api/internshala", {
             email: sendData.email
           });
           if(skilledjobs.status === 200){
             console.log("skilled jobs are : ", skilledjobs.data?.jobs);
             clearJobs(skilledjobs.data?.jobs); 
-          const newApi = await axios.post("http://localhost:3000/api/save-skills" , {
+          const newApi = await axios.post("http://localhost:8000/api/save-skills" , {
             email : sendData?.email
           })
           console.log(newApi.data?.skills)
@@ -63,7 +63,6 @@ const ProfileCardBtn = ({ clearJobs }) => {
         }
       } catch (error) {
         console.error("Error during file upload and PDF extraction:", error);
-        toast.error("An error occurred. Please try again.");
       } finally {
         setLoading(false); 
         window.location.reload();

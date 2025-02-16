@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Search, Bookmark, PlusCircle } from "lucide-react";
 import BookmarkAddedIcon from "@mui/icons-material/BookmarkAdded";
 import SearchIcon from "@mui/icons-material/Search";
 import Card from "./JobsCard";
@@ -9,6 +8,8 @@ import Loader from "./Loader";
 import CustomPagination from "./CustomPagination";
 import ProfileCardBtn from "./ProfileCard";
 import { UserButton, useUser } from "@clerk/clerk-react";
+import NewsLetter from "./NewsLetter";
+import Example from "./DropDown";
 
 export default function JobDashboard() {
   const { register, handleSubmit } = useForm();
@@ -22,10 +23,13 @@ export default function JobDashboard() {
   const userEmail = user?.primaryEmailAddress?.emailAddress
   console.log("userId : ",userEmail)
 
+  // const fetchskills = async (email) => {
+  //   const skills = await axios.get("http://localhost")
+  // }
+
   useEffect(() => {
     if (userEmail) {
-      // Send GET request to store email only if userEmail is available
-      const emailURL = `http://localhost:3000/api/store-email?email=${encodeURIComponent(userEmail)}`;
+      const emailURL = `http://localhost:8000/api/store-email?email=${encodeURIComponent(userEmail)}`;
       axios
         .get(emailURL)
         .then((response) => {
@@ -46,13 +50,12 @@ export default function JobDashboard() {
   const fetchJobs = async (userEmail) => {
     try {
       setLoading(true);
-      const response = await axios.post("http://localhost:3000/api/dashboard", {
+      const response = await axios.post("http://localhost:8000/api/dashboard", {
         email : userEmail
       });
       setJobs(response.data?.jobs || []);
     } catch (error) {
       console.log(error);
-      setError("Server error, Please try again :)");
     } finally {
       setLoading(false);
     }
@@ -84,6 +87,9 @@ export default function JobDashboard() {
             </li>
             <li className="flex items-center space-x-2 text-gray-700 cursor-pointer">
               <ProfileCardBtn  />
+            </li>
+            <li className="space-x-2 text-gray-700 cursor-pointer">
+              <Example  />
             </li>
           </ul>
         </nav>

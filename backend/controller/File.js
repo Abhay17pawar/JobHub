@@ -28,7 +28,6 @@ const categorizeSkills = (skills) => {
     full_stack_development: [],
     mobile_app_development: [],
     machine_learning: [],
-    // dataEngineering: [],
     cloud_computing: [],
     devOps: [],
     cyber_security: [],
@@ -44,18 +43,26 @@ const categorizeSkills = (skills) => {
     for (const category in techStacks) {
       // If the skill belongs to a category, push it into the category array
       if (techStacks[category].includes(skill)) {
-        categorizedSkills[category].push(skill);
+        // Ensure the category exists before using `unshift()`
+        if (!categorizedSkills[category]) {
+          categorizedSkills[category] = []; // Initialize the array if it's undefined
+        }
+        categorizedSkills[category].unshift(skill);  // Push the skill to the correct category
         categorized = true;
       }
     }
     // If the skill doesn't match any category, place it in 'otherTech'
     if (!categorized) {
-      categorizedSkills.otherTech.push(skill);
+      if (!categorizedSkills.otherTech) {
+        categorizedSkills.otherTech = [];  // Initialize 'otherTech' if it's undefined
+      }
+      categorizedSkills.otherTech.unshift(skill);
     }
   });
 
   return categorizedSkills;
 };
+
 
 // Function to extract emails from text
 const extractEmails = (text) => {

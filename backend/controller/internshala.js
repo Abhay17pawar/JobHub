@@ -61,7 +61,7 @@ const dashboardData = async (req, res, skills) => {
         const jobUrl = "https://internshala.com" + ($(element).find(".company a").attr("href") || "#");
         const logo = $(element).find(".internship_logo img").attr("src") || "";
 
-        scrapedData.push({ jobTitle, company, jobLocation, stipend, jobUrl, logo });
+        scrapedData.unshift({ jobTitle, company, jobLocation, stipend, jobUrl, logo });
       });
 
       return res.json({ skills, jobs: scrapedData });

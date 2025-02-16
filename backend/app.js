@@ -6,7 +6,7 @@ const uploadRoutes = require('./routes/file');
 const app = express();
 
 dotenv.config();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8000;
 const MONGO_URI = process.env.MONGO_URI;
 
 app.use(cors()); 
@@ -14,11 +14,13 @@ app.use(cors());
 app.use(express.json());
 
 const dashboardRoutes = require('./routes/dashboardRoute');
+const paymentRoutes = require("./routes/paymentRoute");
 const platformRoutes = require("./routes/platform");
 
 app.use('/api', dashboardRoutes);
 app.use('/api', uploadRoutes);
 app.use('/api',platformRoutes);
+app.use("/api/payment", paymentRoutes);
 
 mongoose.connect(MONGO_URI)
         .then(() => {
@@ -34,5 +36,4 @@ mongoose.connect(MONGO_URI)
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
-
 
