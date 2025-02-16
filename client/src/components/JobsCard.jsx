@@ -24,8 +24,8 @@ const JobCard = ({title,company,salary,location,type,logo,jobLink}) => {
         <WorkIcon/>
         {company}</p>
       
-    <p className="mt-1 text-lg font-semibold mx-3 ">
-        <CurrencyRupeeIcon/>{salary}</p>
+    <p className="mt-1 ml-4 text-lg font-semibold mx-3 ">
+        {salary}</p>
     <p className="mt-1 text-lg font-semibold mx-3">
         <PlaceIcon/>{location}</p>
   <p className="mt-1 mx-4 text-lg font-semibold">

@@ -1,8 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const { internshala, skills } = require('../controller/internshala');
+const { linkedin } = require('../controller/linkedin');
 
 router.post('/internshala',internshala);
+router.post('/linkedin',linkedin);
 router.post('/save-skills',skills);
 
 module.exports = router;

@@ -10,6 +10,7 @@ import ProfileCardBtn from "./ProfileCard";
 import { UserButton, useUser } from "@clerk/clerk-react";
 import NewsLetter from "./NewsLetter";
 import Example from "./DropDown";
+import Button1 from "./style/Button1";
 
 export default function JobDashboard() {
   const { register, handleSubmit } = useForm();
@@ -90,6 +91,9 @@ export default function JobDashboard() {
             </li>
             <li className="space-x-2 text-gray-700 cursor-pointer">
               <Example  />
+            </li>
+            <li className="space-x-2 text-gray-700 cursor-pointer">
+              <Button1  />
             </li>
           </ul>
         </nav>
