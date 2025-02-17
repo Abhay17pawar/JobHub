@@ -4,12 +4,12 @@ const User = require("../models/userModel");
 const linkedin = async (req, res) => {
     const { email, skills } = req.body;
     let location = req.body.location || "remote";
+    let keywords = skills || ""; // If skills are passed, use them; otherwise, default to an empty string.
 
     try {
-
-        if(location == null){
+        if (location == null) {
             location = "remote";
-        };
+        }
 
         const dbjobs = await User.findOne({ email });
 
@@ -17,28 +17,30 @@ const linkedin = async (req, res) => {
             return res.status(404).send("User not found");
         }
 
-        const dbskills = dbjobs.skills;
-
-        const techStackNames = Object.keys(dbskills).filter(key => dbskills[key].length > 0);
-        //console.log(techStackNames);
-
         let linkedinUrl;
-
-        if(skills != null){
-         linkedinUrl = await axios.get(`http://localhost:3000/api/search?keywords=${skills}&location=${location}&dateSincePosted=past_month`)
-        }
-        else{
-            if(techStackNames != null){
-                linkedinUrl = await axios.get(`http://localhost:3000/api/search?keywords=${techStackNames}&location=remote&dateSincePosted=past_month`)
-            }
+        // Check if skills are passed and valid before making the request
+        if (keywords && keywords.length > 0) {
+            linkedinUrl = await axios.get(`http://localhost:3000/api/search?keywords=${keywords}&location=${location}&dateSincePosted=past_month`);
+        } else {
+            // If no valid skills, you can either skip the API call or use a default search term
+            linkedinUrl = await axios.get(`http://localhost:3000/api/search?keywords=${'machinelearning'}&location=${location}&dateSincePosted=past_month`);
         }
 
-        return res.send(linkedinUrl?.data); 
+        const dbskills = dbjobs.skills;
+        const techStackNames = Object.keys(dbskills).filter(key => dbskills[key].length > 0);
+
+        if (techStackNames.length > 0) {
+            // If techStackNames is provided, fetch jobs based on tech stack
+            linkedinUrl = await axios.get(`http://localhost:3000/api/search?keywords=${techStackNames.join(",")}&location=${location}&dateSincePosted=past_month`);
+        }
+
+        return res.send(linkedinUrl?.data);
 
     } catch (error) {
         console.log("error", error);
         return res.status(500).send("Server error");
     }
 };
+
 
 module.exports = { linkedin };

@@ -1,8 +1,12 @@
 import { ChevronRight, SparklesIcon } from "lucide-react";
 
-export default function Button1() {
+export default function Button1({setClicked}) {
+    const LinkedinData = async () => {
+     setClicked(true);
+    }
   return (
     <button
+    onClick={LinkedinData}
       className="ml-1 group flex transform-gpu items-center gap-1 rounded-md px-2 py-1 transition-colors 
                  bg-black hover:bg-gray-900 active:bg-gray-800 text-white"
       type="button"

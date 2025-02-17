@@ -1,8 +1,8 @@
 import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd';
 import WorkIcon from '@mui/icons-material/Work';
 import PlaceIcon from '@mui/icons-material/Place';
-import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
 import LaptopWindowsIcon from '@mui/icons-material/LaptopWindows';
+
 const JobCard = ({title,company,salary,location,type,logo,jobLink}) => {
     return (
       <article className="w-full max-w-xs bg-white rounded-xl p-2 pb-0.5 text-gray-900 shadow-md">

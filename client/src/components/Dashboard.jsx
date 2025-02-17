@@ -18,6 +18,7 @@ export default function JobDashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [page, setPage] = useState(1);
+  const [clicked,setClicked] = useState(false);
   const jobsPerPage = 8;
 
   const { user } = useUser();
@@ -28,6 +29,29 @@ export default function JobDashboard() {
   //   const skills = await axios.get("http://localhost")
   // }
 
+  useEffect(() => {
+    if (clicked && userEmail) {
+      const fetchData = async () => {
+        try {
+          // Example API call
+          const response = await axios.post("http://localhost:8000/api/linkedin",
+            {
+              email : userEmail
+            } 
+          );
+          setJobs(response?.data?.jobs || []); 
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        } 
+        // finally {
+        //   setClicked(false);
+        // }
+      };
+  
+      fetchData();
+    }
+  }, [clicked]); // This useEffect will run every time the `clicked` state changes.
+  
   useEffect(() => {
     if (userEmail) {
       const emailURL = `http://localhost:8000/api/store-email?email=${encodeURIComponent(userEmail)}`;
@@ -64,6 +88,7 @@ export default function JobDashboard() {
 
   const onSubmit = (data) => {
     fetchJobs(data);
+
   };
 
   const handlePageChange = (event, value) => {
@@ -93,7 +118,7 @@ export default function JobDashboard() {
               <Example  />
             </li>
             <li className="space-x-2 text-gray-700 cursor-pointer">
-              <Button1  />
+              <Button1 setClicked={setClicked}/>
             </li>
           </ul>
         </nav>
@@ -138,35 +163,68 @@ export default function JobDashboard() {
           <p className="text-center text-red-500 mt-6">{error}</p>
         ) : (
           <>
-            <div className="grid grid-cols-4 gap-2 mt-6">
-              {displayedJobs
-                .filter((job) => {
-                  const missingFields = [
-                    !job?.jobTitle,
-                    !job?.company,
-                    !job?.stipend,
-                    !job?.jobLocation,
-                    !job?.company_url,
-                    !job?.jobUrl,
-                    !job?.logo,
-                  ].filter(Boolean).length;
+        <>
+  {
+    clicked === false ? (
+      <div className="grid grid-cols-4 gap-2 mt-6">
+        {displayedJobs
+          .filter((job) => {
+            // Ensure missing fields are handled correctly for both job objects
+            const missingFields = [
+              !job?.jobTitle,
+              !job?.company,
+              !job?.stipend,
+              !job?.jobLocation,
+              !job?.company_url,
+              !job?.jobUrl,
+              !job?.logo,
+            ].filter(Boolean).length;
 
-                  return missingFields <= 2;
-                })
-                .map((job, index) => (
-                  <Card
-                    key={index}
-                    title={job?.jobTitle || "No Title"}
-                    company={job?.company || "No Company"}
-                    salary={job?.stipend || "Not disclosed"}
-                    location={job?.jobLocation || "Location not specified"}
-                    type={job?.job_type || "Internship"}
-                    platform={job?.company_url || ""}
-                    jobLink={job?.jobUrl || "#"}
-                    logo={job?.logo || ""}
-                  />
-                ))}
-            </div>
+            return missingFields <= 2; // Only show jobs with at most 2 missing fields
+          })
+          .map((job, index) => (
+            <Card
+              key={index}
+              title={job?.jobTitle || "No Title"}
+              company={job?.company || "No Company"}
+              salary={job?.stipend || "Not disclosed"}
+              location={job?.jobLocation || "Location not specified"}
+              type={job?.job_type || "Internship"}
+              platform={job?.company_url || ""}
+              jobLink={job?.jobUrl || "#"}
+              logo={job?.logo || ""}
+            />
+          ))}
+      </div>
+    ) : (
+      <div className="grid grid-cols-4 gap-2 mt-6">
+        {displayedJobs
+          .filter((job) => {
+            // Handle missing fields for the alternative job object structure
+            const missingFields = [
+              !job?.title,
+              !job?.company,
+              !job?.location,
+              !job?.link,
+              !job?.logo,
+            ].filter(Boolean).length;
+
+            return missingFields <= 2; // Only show jobs with at most 2 missing fields
+          })
+          .map((job, index) => (
+            <Card
+              key={index}
+              title={job?.title || "No Title"}
+              company={job?.company || "No Company"}
+              location={job?.location || "Location not specified"}
+              jobLink={job?.link || "#"}
+              logo={job?.logo || ""}
+            />
+          ))}
+      </div>
+    )
+  }
+</>
 
             {totalPages > 1 && (
               <div className="flex justify-center mt-4">
