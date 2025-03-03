@@ -3,6 +3,7 @@ const dotenv = require('dotenv');
 const cors = require('cors');  
 const { mongoose } = require("mongoose");
 const uploadRoutes = require('./routes/file');
+const cron = require("node-cron");
 const app = express();
 
 dotenv.config();
@@ -16,6 +17,7 @@ app.use(express.json());
 const dashboardRoutes = require('./routes/dashboardRoute');
 const paymentRoutes = require("./routes/paymentRoute");
 const platformRoutes = require("./routes/platform");
+const { linkedinCronJobs } = require("./cron/schedule");
 
 app.use('/api', dashboardRoutes);
 app.use('/api', uploadRoutes);
@@ -25,6 +27,7 @@ app.use("/api/payment", paymentRoutes);
 mongoose.connect(MONGO_URI)
         .then(() => {
           console.log("server connected to mongoDB")
+          linkedinCronJobs();
         })
         .catch((error) => {
           console.log(() => {
@@ -33,7 +36,7 @@ mongoose.connect(MONGO_URI)
         })
 
 
-app.listen(PORT, () => {
+  app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
 

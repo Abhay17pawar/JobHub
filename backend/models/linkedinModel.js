@@ -1,6 +1,9 @@
 const mongoose = require("mongoose");
 
 const linkedinSchema = new mongoose.Schema({
+    email : {
+      type : String
+    },
      title : {
         type : String,
      },
@@ -12,6 +15,7 @@ const linkedinSchema = new mongoose.Schema({
      },
      link : {
         type : String,
+        //unique : true
      },
 }, {
     timestamps : true

@@ -25,9 +25,13 @@ export default function JobDashboard() {
   const userEmail = user?.primaryEmailAddress?.emailAddress
   console.log("userId : ",userEmail)
 
-  // const fetchskills = async (email) => {
-  //   const skills = await axios.get("http://localhost")
-  // }
+  useEffect(() => {
+    const isFirstVisit = !localStorage.getItem("hasVisited");
+    if (isFirstVisit) {
+      window.location.reload();
+      localStorage.setItem("hasVisited", "true");
+    }
+  }, []);
 
   useEffect(() => {
     if (clicked && userEmail) {
@@ -39,7 +43,8 @@ export default function JobDashboard() {
               email : userEmail
             } 
           );
-          setJobs(response?.data?.jobs || []); 
+          setJobs(response?.data || []); 
+          console.log(response?.data)
         } catch (error) {
           console.error("Error fetching data:", error);
         } 
@@ -101,7 +106,7 @@ export default function JobDashboard() {
 
   return (
     <div className="flex bg-gray-100">
-      <aside className="w-64 bg-white p-6 border-r">
+      <aside className="w-56 bg-white p-6 border-r ">
         <h1 className="text-2xl font-bold mb-6">JobHub</h1>
         <nav>
           <ul className="space-y-4">
@@ -199,28 +204,29 @@ export default function JobDashboard() {
     ) : (
       <div className="grid grid-cols-4 gap-2 mt-6">
         {displayedJobs
-          .filter((job) => {
-            // Handle missing fields for the alternative job object structure
-            const missingFields = [
-              !job?.title,
-              !job?.company,
-              !job?.location,
-              !job?.link,
-              !job?.logo,
-            ].filter(Boolean).length;
+          // .filter((job) => {
+          //   // Handle missing fields for the alternative job object structure
+          //   const missingFields = [
+          //     !job?.title,
+          //     !job?.company,
+          //     !job?.location,
+          //     !job?.link,
+          //     !job?.logo,
+          //   ].filter(Boolean).length;
 
-            return missingFields <= 2; // Only show jobs with at most 2 missing fields
-          })
+          //   return missingFields <= 5; // Only show jobs with at most 2 missing fields
+          // })
           .map((job, index) => (
             <Card
-              key={index}
-              title={job?.title || "No Title"}
-              company={job?.company || "No Company"}
-              location={job?.location || "Location not specified"}
-              jobLink={job?.link || "#"}
-              logo={job?.logo || ""}
-            />
-          ))}
+            key={index}
+            title={job?.title || "No Title"}
+            company={job?.company || "No Company"}
+            location={job?.location || "Location not specified"}
+            jobLink={job?.jobLink ? job?.jobLink : null}  // Remove double quotes
+            logo={job?.logo || ""}
+          />
+          ))
+          }
       </div>
     )
   }
