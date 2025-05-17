@@ -1,0 +1,56 @@
+{
+  "name": "@atharvh01/linkedin-jobs-api",
+  "version": "1.0.0",
+  "description": "An unofficial LinkedIn Jobs API to fetch job listings with advanced filtering and rate limiting",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "test": "node src/tests/apiTest.js",
+    "test:api": "node src/tests/apiTest.js"
+  },
+  "keywords": [
+    "linkedin",
+    "jobs",
+    "api",
+    "scraper",
+    "job-search",
+    "linkedin-jobs",
+    "job-api",
+    "careers",
+    "recruitment"
+  ],
+  "author": {
+    "name": "Atharv Hatwar",
+    "url": "https://github.com/atharv01h"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/atharvhatwar/linkedin-jobs-api"
+  },
+  "bugs": {
+    "url": "https://github.com/atharv01h/linkedin-jobs-api/issues"
+  },
+  "homepage": "https://github.com/atharv01h/linkedin-jobs-api#readme",
+  "license": "MIT",
+  "dependencies": {
+    "@atharvh01/linkedin-jobs-api": "^1.0.1",
+    "axios": "^1.6.2",
+    "cheerio": "^1.0.0-rc.12",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "express-rate-limit": "^7.1.5",
+    "puppeteer": "^21.6.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
