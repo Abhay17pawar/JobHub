@@ -18,7 +18,7 @@ app.get('/scrape-jobs', async (req, res) => {
         );
 
         // Navigate to Glassdoor's job search page (modify query as needed)
-        const url = 'https://www.glassdoor.co.in/Job/remote-india-mern-stack-developer-jobs-SRCH_IL.0,12_IS12563_KO13,33.htm';
+        const url = `https://www.glassdoor.co.in/Job/${location}-india-${title}-jobs-SRCH_IL.0,12_IS12563_KO13,33.htm?minSalary=${salary}`;
         await page.goto(url, { waitUntil: 'networkidle2' });
 
         // Wait for job listings to load

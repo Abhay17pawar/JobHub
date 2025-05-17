@@ -106,7 +106,7 @@ export default function JobDashboard() {
 
   return (
     <div className="flex bg-gray-100">
-      <aside className="w-56 bg-white p-6 border-r ">
+      <aside className="w-56 bg-white p-6 border-r sticky top-0 h-screen">
         <h1 className="text-2xl font-bold mb-6">JobHub</h1>
         <nav>
           <ul className="space-y-4">

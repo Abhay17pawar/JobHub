@@ -31,7 +31,7 @@ const JobCard = ({title,company,salary,location,type,logo,jobLink}) => {
         <PlaceIcon/>{location}</p>
   <p className="mt-1 mx-4 text-lg font-semibold">
     <LaptopWindowsIcon/>{type}</p>
-  <BookmarkAddIcon className='mx-60 mt-[-260px]' />
+  {/* <BookmarkAddIcon className='mx-60 mt-[-260px]' /> */}
       </article>
     );
   };
