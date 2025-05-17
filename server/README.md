@@ -2,10 +2,7 @@
 
 An unofficial API to fetch job listings from LinkedIn. This API allows you to search for jobs using keywords, location, and date filters.
 
-Created by: **Atharv Hatwar**
-
-[![npm version](https://img.shields.io/npm/v/@atharvh01/linkedin-jobs-api.svg)](https://www.npmjs.com/package/@atharvh01/linkedin-jobs-api)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+Created by: **Abhay Pawar**
 
 ## Features
 
@@ -17,11 +14,6 @@ Created by: **Atharv Hatwar**
 - ⚠️ Error handling
 - 🛡️ Rate limiting protection
 
-## Installation
-
-```bash
-npm install @atharvh01/linkedin-jobs-api
-```
 
 ## Quick Start
 
@@ -107,23 +99,4 @@ npm test
 npm run test:api
 ```
 
-## Contributing
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Author
-
-**Atharv Hatwar**
-- GitHub: [atharvhatwar](https://github.com/atharv01h)
-
-## Legal Notice
-
-This package is for educational purposes only. Please review LinkedIn's terms of service before using this API in production.
